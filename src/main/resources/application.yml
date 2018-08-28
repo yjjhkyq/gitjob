@@ -1,0 +1,20 @@
+spring:
+   datasource:
+     driverClassName: com.mysql.jdbc.Driver
+     url: jdbc:mysql://localhost:3306/cloudjob?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+     username: root
+     password: root
+     
+logging:
+  file: log/gitjob-web.log
+  level:
+    com:
+      dese100: INFO
+    org:
+      springframework:
+        web: ERROR
+      hibernate: INFO
+        
+mybatis:
+  type-aliases-package: com.dese100.gitjob.repository
+  mapper-locations: classpath:mybatis/mapper/*.xml
