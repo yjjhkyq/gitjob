@@ -1,5 +1,7 @@
 package com.dese100.gitjob.exception;
 
+import com.dese100.gitjob.exception.code.ExceptionCode;
+
 /**
  * 业务异常 用于在处理业务逻辑时，进行抛出的异常。
  *
@@ -31,7 +33,11 @@ public class BizException extends BaseUncheckedException {
 	public static BizException wrap(int code, String message, Object... args) {
 		return new BizException(code, message, args);
 	}
-
+	
+	public static BizException wrap(ExceptionCode exceptionCode) {
+		return new BizException(exceptionCode.getCode(), exceptionCode.getMsg());
+	}
+	
 	@Override
 	public String toString() {
 		return "BizException [message=" + message + ", code=" + code + "]";

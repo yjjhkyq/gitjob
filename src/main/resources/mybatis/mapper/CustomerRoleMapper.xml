@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.dese100.gitjob.repository.CustomerRoleMapper">
+	<resultMap type="com.dese100.gitjob.domain.CustomerRole"
+		id="BaseResultMap">
+		<id column="Id" jdbcType="BIGINT" property="id" />
+		<result column="Name" jdbcType="VARCHAR" property="name" />
+		<result column="Active" jdbcType="BIT" property="active" />
+		<result column="IsSystemRole" jdbcType="BIT"
+			property="isSystemRole" />
+		<result column="SystemName" jdbcType="VARCHAR"
+			property="systemName" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		Id,Name, Active,
+		IsSystemRole, SystemName 
+	</sql>
+	<insert id="insertCustomerRole"
+		parameterType="com.dese100.gitjob.domain.CustomerRole"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into customer_role (Id,
+		Name, Active,
+		IsSystemRole, SystemName)
+		values (#{id,jdbcType=BIGINT},
+		#{name,jdbcType=VARCHAR},
+		#{active,jdbcType=BIT},
+		#{isSystemRole,jdbcType=BIT}, #{systemName,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateCustomerRole"
+		parameterType="com.dese100.gitjob.domain.CustomerRole">
+		update customer_role
+		<set>
+			Name = #{name,jdbcType=VARCHAR},
+			Active = #{active,jdbcType=BIT},
+			IsSystemRole = #{isSystemRole,jdbcType=BIT},
+			SystemName = #{systemName,jdbcType=VARCHAR}
+		</set>
+		<where>
+			Id = #{id,jdbcType=BIGINT}
+		</where>
+	</update>
+	<delete id="deleteCustomerRole" parameterType="java.lang.Long">
+		delete from customer_role
+		where Id = #{id,jdbcType=BIGINT}
+	</delete>
+	<select id="getCustomerRoleById" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+ 	select 
+    <include refid="Base_Column_List" />
+    from customer_role
+    <where>
+    Id = #{id,jdbcType=BIGINT}
+    </where>
+      
+	</select>
+	<select id="getAllCustomerRoles" parameterType="java.lang.Boolean" resultMap="BaseResultMap">
+		select 
+    <include refid="Base_Column_List" />
+    from customer_role
+    <where>
+     <if test="showHidden=false">
+     	Active = 1
+     </if>
+    </where>
+	</select>
+</mapper>

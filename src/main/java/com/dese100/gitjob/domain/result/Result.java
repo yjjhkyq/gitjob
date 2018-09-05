@@ -1,7 +1,13 @@
 package com.dese100.gitjob.domain.result;
 
+import java.util.List;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
 import com.dese100.gitjob.exception.BizException;
 import com.dese100.gitjob.exception.code.BaseExceptionCode;
+import com.dese100.gitjob.exception.code.ExceptionCode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Result<T> {
     public static final String DEF_ERROR_MESSAGE = "系统繁忙，请稍候再试";
@@ -91,7 +97,11 @@ public class Result<T> {
     public static <E> Result<E> fail(Throwable throwable) {
         return fail(throwable != null ? throwable.getMessage() : DEF_ERROR_MESSAGE);
     }
-
+    
+    public static <E> Result<E> bindingError(BindingResult bindingResult) {
+        return new Result(ExceptionCode.VALIDATE_ERROR.getCode(), bindingResult.getFieldErrors(), ExceptionCode.VALIDATE_ERROR.getMsg());
+    }
+    
     public static <E> Result<E> timeout() {
         return fail(HYSTRIX_ERROR_MESSAGE);
     }

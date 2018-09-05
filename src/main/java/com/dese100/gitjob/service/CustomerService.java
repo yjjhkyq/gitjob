@@ -1,28 +1,29 @@
 package com.dese100.gitjob.service;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dese100.gitjob.domain.Customer;
 import com.dese100.gitjob.domain.CustomerPassword;
+import com.dese100.gitjob.domain.CustomerRole;
 import com.dese100.gitjob.domain.PasswordFormat;
+import com.dese100.gitjob.exception.BizException;
+import com.dese100.gitjob.exception.code.ExceptionCode;
 import com.dese100.gitjob.repository.CustomerMapper;
-
+import com.dese100.gitjob.repository.CustomerRoleMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 @Service
 public class CustomerService implements ICustomerService{
 
 	@Autowired
 	CustomerMapper customerDao;
+	@Autowired
+	CustomerRoleMapper customerRoleDao;
 	
 	@Override
 	public void DeleteCustomer(Customer customer) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -100,6 +101,42 @@ public class CustomerService implements ICustomerService{
 	public void UpdateCustomerPassword(CustomerPassword customerPassword) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void deleteCustomerRole(CustomerRole customerRole) {
+		if(customerRole.getIsSystemRole())
+			throw BizException.wrap(ExceptionCode.DELETE_SYSTEM_ROLE_ERROR);
+		customerRoleDao.deleteCustomerRole(customerRole.getId());
+	}
+
+	@Override
+	public CustomerRole getCustomerRoleById(Long customerRoleId) {
+		return customerRoleDao.getCustomerRoleById(customerRoleId);
+	}
+
+	@Override
+	public CustomerRole getCustomerRoleBySystemName(String systemName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PageInfo<CustomerRole> GetAllCustomerRoles(Boolean showHidden) {
+		 PageHelper.startPage(1, Integer.MAX_VALUE);
+		 List<CustomerRole> data = customerRoleDao.getAllCustomerRoles(showHidden);
+		 PageInfo<CustomerRole> pageInfo = new PageInfo<>(data);
+		 return pageInfo;
+	}
+
+	@Override
+	public void insertCustomerRole(CustomerRole customerRole) {
+		customerRoleDao.insertCustomerRole(customerRole);
+	}
+
+	@Override
+	public void updateCustomerRole(CustomerRole customerRole) {
+		customerRoleDao.updateCustomerRole(customerRole);
 	}
 
 }

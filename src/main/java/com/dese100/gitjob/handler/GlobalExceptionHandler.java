@@ -24,12 +24,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BizException.class)
     public Result baseExceptionHandler(BizException ex) {
         log.error("BizException:", ex);
-        return new Result(ex.getCode(), null, ex.getMessage());
+        return Result.fail(ex);
     }
 
     @ExceptionHandler(Exception.class)
     public Result otherExceptionHandler(Exception ex) {
         log.error("Exception:", ex);
-        return new Result(ExceptionCode.SYSTEM_BUSY.getCode(), null, ex.getMessage());
+        return Result.fail(ex);
     }
 }

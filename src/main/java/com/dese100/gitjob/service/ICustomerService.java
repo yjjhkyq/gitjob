@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.dese100.gitjob.domain.Customer;
 import com.dese100.gitjob.domain.CustomerPassword;
+import com.dese100.gitjob.domain.CustomerRole;
 import com.dese100.gitjob.domain.PasswordFormat;
+import com.github.pagehelper.PageInfo;
 
 public interface ICustomerService {
     /// <summary>
@@ -87,5 +89,44 @@ public interface ICustomerService {
     /// </summary>
     /// <param name="customerPassword">Customer password</param>
     void UpdateCustomerPassword(CustomerPassword customerPassword);
+   
+    /// <summary>
+    /// Delete a customer role
+    /// </summary>
+    /// <param name="customerRole">Customer role</param>
+    void deleteCustomerRole(CustomerRole customerRole);
+
+    /// <summary>
+    /// Gets a customer role
+    /// </summary>
+    /// <param name="customerRoleId">Customer role identifier</param>
+    /// <returns>Customer role</returns>
+    CustomerRole getCustomerRoleById(Long customerRoleId);
+
+    /// <summary>
+    /// Gets a customer role
+    /// </summary>
+    /// <param name="systemName">Customer role system name</param>
+    /// <returns>Customer role</returns>
+    CustomerRole getCustomerRoleBySystemName(String systemName);
+
+    /// <summary>
+    /// Gets all customer roles
+    /// </summary>
+    /// <param name="showHidden">A value indicating whether to show hidden records</param>
+    /// <returns>Customer roles</returns>
+    PageInfo<CustomerRole> GetAllCustomerRoles(Boolean showHidden);
+
+    /// <summary>
+    /// Inserts a customer role
+    /// </summary>
+    /// <param name="customerRole">Customer role</param>
+    void insertCustomerRole(CustomerRole customerRole);
+
+    /// <summary>
+    /// Updates the customer role
+    /// </summary>
+    /// <param name="customerRole">Customer role</param>
+    void updateCustomerRole(CustomerRole customerRole);
 
 }

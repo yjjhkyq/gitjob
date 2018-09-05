@@ -3,23 +3,23 @@ package com.dese100.gitjob.domain;
 import java.util.Date;
 
 public class Customer extends BaseEntity{
-	private long id;
+	private Long id;
 	private String userName;
 	private String phone;
 	private String email;
 	private String emailToRevalidate;
-	private int failedLoginAttempts;
+	private Integer failedLoginAttempts;
 	private Date cannotLoginUntilDateUtc;
-	private boolean deleted;
-	private boolean isSystemAccount;
+	private Boolean deleted;
+	private Boolean isSystemAccount;
 	private String systemName;
 	private Date createdOnUtc;
-	private boolean active;
-	private long tenantId;
-	public long getId() {
+	private Boolean active;
+	private Long tenantId;
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getUserName() {
@@ -46,10 +46,10 @@ public class Customer extends BaseEntity{
 	public void setEmailToRevalidate(String emailToRevalidate) {
 		this.emailToRevalidate = emailToRevalidate;
 	}
-	public int getFailedLoginAttempts() {
+	public Integer getFailedLoginAttempts() {
 		return failedLoginAttempts;
 	}
-	public void setFailedLoginAttempts(int failedLoginAttempts) {
+	public void setFailedLoginAttempts(Integer failedLoginAttempts) {
 		this.failedLoginAttempts = failedLoginAttempts;
 	}
 	public Date getCannotLoginUntilDateUtc() {
@@ -58,16 +58,16 @@ public class Customer extends BaseEntity{
 	public void setCannotLoginUntilDateUtc(Date cannotLoginUntilDateUtc) {
 		this.cannotLoginUntilDateUtc = cannotLoginUntilDateUtc;
 	}
-	public boolean isDeleted() {
+	public Boolean isDeleted() {
 		return deleted;
 	}
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	public boolean isSystemAccount() {
+	public Boolean isSystemAccount() {
 		return isSystemAccount;
 	}
-	public void setSystemAccount(boolean isSystemAccount) {
+	public void setSystemAccount(Boolean isSystemAccount) {
 		this.isSystemAccount = isSystemAccount;
 	}
 	public String getSystemName() {
@@ -82,16 +82,16 @@ public class Customer extends BaseEntity{
 	public void setCreatedOnUtc(Date createdOnUtc) {
 		this.createdOnUtc = createdOnUtc;
 	}
-	public boolean isActive() {
+	public Boolean isActive() {
 		return active;
 	}
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	public long getTenantId() {
+	public Long getTenantId() {
 		return tenantId;
 	}
-	public void setTenantId(long tenantId) {
+	public void setTenantId(Long tenantId) {
 		this.tenantId = tenantId;
 	}
 	
