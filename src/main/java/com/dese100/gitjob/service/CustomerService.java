@@ -27,10 +27,17 @@ public class CustomerService implements ICustomerService{
 	CustomerPasswordMapper customerPasswordDao;
 	@Override
 	public void DeleteCustomer(Customer customer) {
+		
+		customer.setDeleted(true);
+		customer.setEmail(customer.getEmail() + "-DELETED");
+		customer.setUserName(customer.getUserName() + "-DELETED");
+		customer.setPhone(customer.getPhone() + "-DELETED");
+		customerDao.updateCustomer(customer);
+		customerDao.deleteAllCustomerRole(customer.getId());
 	}
 
 	@Override
-	public Customer GetCustomerById(Integer customerId) {
+	public Customer GetCustomerById(Long customerId) {
 		return customerDao.getCustomerBy(customerId, null, null, null);
 	}
 
@@ -73,8 +80,7 @@ public class CustomerService implements ICustomerService{
 
 	@Override
 	public void UpdateCustomer(Customer customer) {
-		// TODO Auto-generated method stub
-		
+		customerDao.updateCustomer(customer);
 	}
 
 	@Override

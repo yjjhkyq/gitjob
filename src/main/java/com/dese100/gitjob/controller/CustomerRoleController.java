@@ -48,8 +48,8 @@ public class CustomerRoleController {
 		return Result.success(customerRole.getId());
 	} 
 	
-	@GetMapping("/edit")
-	public Result<?> edit(long id)
+	@GetMapping("/detail")
+	public Result<?> detail(long id)
 	{
 		CustomerRole customerRole = customerService.getCustomerRoleById(id);
 		if(null == customerRole)

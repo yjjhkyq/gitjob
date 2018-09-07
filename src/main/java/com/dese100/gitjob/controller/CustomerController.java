@@ -22,6 +22,8 @@ import com.dese100.gitjob.domain.CustomerRole;
 import com.dese100.gitjob.domain.PasswordFormat;
 import com.dese100.gitjob.domain.SystemCustomerRoleNames;
 import com.dese100.gitjob.domain.result.Result;
+import com.dese100.gitjob.exception.BizException;
+import com.dese100.gitjob.exception.code.ExceptionCode;
 import com.dese100.gitjob.mapper.ModelMapper;
 import com.dese100.gitjob.models.CustomerListModel;
 import com.dese100.gitjob.models.CustomerModel;
@@ -98,7 +100,72 @@ public class CustomerController {
 		customerService.setCustomerRole(customer, newCustomerRoles);
 		return Result.success(1);
 	}
+	
+	@GetMapping("/detail")
+	public Result<?> detail(long customerId) {
+		Customer customer = customerService.GetCustomerById(customerId);
+		if(null == customer)
+			throw BizException.wrap(ExceptionCode.NOT_FOUND_ENTITT_ERROR);
+		CustomerModel model = ModelMapper.toModel(customer, customerService);
+		return Result.success(model);
+	}
+	
+	@Transactional
+	@PostMapping("/edit")
+	public Result<?> edit(@RequestBody @Validated CustomerModel model, BindingResult bindingResult) {
+		if (!StringUtils.isNullOrEmpty(model.getEmail())) {
+			Customer customer = customerService.GetCustomerByEmail(model.getEmail());
+			if (null != customer && customer.getId() != model.getId()) {
+				bindingResult.addError(new ObjectError("allerrors", "Email is already registered"));
+			}
+		}
+		if (StringUtils.isNullOrEmpty(model.getUserName())) {
+			Customer customer = customerService.GetCustomerByUsername(model.getUserName());
+			if (null != customer && customer.getId() != model.getId()) {
+				bindingResult.addError(new ObjectError("allerrors", "Username is already registered"));
+			}
+		}
 
+		List<CustomerRole> customerRoles = customerService.GetAllCustomerRoles(true).getList();
+		List<CustomerRole> newCustomerRoles = new ArrayList<CustomerRole>();
+		model.getCustomerRoles().forEach(s -> {
+			for (CustomerRole customerRole : customerRoles) {
+				if (customerRole.getId() == s.getId()) {
+					newCustomerRoles.add(customerRole);
+					return;
+				}
+			}
+		});
+
+		String customerRoleError = ValidateCustomerRoles(customerRoles);
+		if (!StringUtils.isNullOrEmpty(customerRoleError)) {
+			bindingResult.addError(new ObjectError("allerrors", customerRoleError));
+		}
+		
+		if (bindingResult.hasErrors()) {
+			return Result.bindingError(bindingResult);
+		}
+
+		Customer customerEdit = ModelMapper.toEntity(model, null);
+		customerService.UpdateCustomer(customerEdit);
+		customerRegistrationService.changePassword(customerEdit.getUserName(), false, PasswordFormat.Hashed,
+				model.getPassword(), null);
+		customerService.setCustomerRole(customerEdit, newCustomerRoles);
+		return Result.success(1);
+	}
+
+	@PostMapping("/delete")
+	public Result<?> delete(@RequestBody long id) {
+		Customer customerExisted = customerService.GetCustomerById(id);
+		if(null == customerExisted) {
+			throw BizException.wrap(ExceptionCode.NOT_FOUND_ENTITT_ERROR);
+		}
+		if(customerExisted.isSystemAccount())
+			throw BizException.wrap(ExceptionCode.DELETE_SYSTEM_ACCOUNT_ERROR);
+		customerService.DeleteCustomer(customerExisted);
+		return Result.success(id);
+	}
+	
 	private String ValidateCustomerRoles(List<CustomerRole> lists) {
 		if (0 >= lists.size()) {
 			return "NoCustomerRoleError";

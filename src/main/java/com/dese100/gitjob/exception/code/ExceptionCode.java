@@ -2,10 +2,10 @@ package com.dese100.gitjob.exception.code;
 
 public enum ExceptionCode implements BaseExceptionCode {
     //系统相关 start
-    SYSTEM_BUSY(-1, "系统繁忙，请稍候再试"),
-    SYSTEM_TIMEOUT(-2, "系统超时，请稍候再试"),
-    VALIDATE_ERROR(-3, "校验错误"),
-    NOT_FOUND_ENTITT_ERROR(-4, "校验错误"),
+    SYSTEM_BUSY(-1, "system busy"),
+    SYSTEM_TIMEOUT(-2, "time out"),
+    VALIDATE_ERROR(-3, "validate error"),
+    NOT_FOUND_ENTITT_ERROR(-4, "object not founded"),
     //系统相关 end
 
     //DB相关 start
@@ -16,8 +16,10 @@ public enum ExceptionCode implements BaseExceptionCode {
     DELETE_SYSTEM_ROLE_ERROR(20000, "System role could not be deleted"),
     EDIT_SYSTEM_ROLE_ERROR(20001, "can not edit system role "),
     //customer role
-    
-	 TOKEN_EXPIRED(40001, "token超时，请检查 token 的有效期");
+    //Customer
+    DELETE_SYSTEM_ACCOUNT_ERROR(20001, "can not delete system system "),
+    //Customer
+	 TOKEN_EXPIRED(40001, "token expired");
 	 
 	 private  int code;
     private  String msg;

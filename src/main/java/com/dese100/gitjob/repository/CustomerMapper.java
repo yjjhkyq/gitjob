@@ -13,9 +13,9 @@ public interface CustomerMapper{
 	List<Customer> getAllCustomers(Date createdFromUtc, Date createdToUtc, Integer[] customerRoleIds,
 			String email, String userName, String phone);
 	void deleteCustomer(int id);
-	Customer getCustomerBy(Integer id, String email, String systemName, String userName);
+	Customer getCustomerBy(Long id, String email, String systemName, String userName);
 	void insertCustomer(Customer customer);
-	void UpdateCustomer(Customer customer);
+	void updateCustomer(Customer customer);
 	void insertCustomerRole(Customer customer, List<CustomerRole> customerRoles);
 	void deleteAllCustomerRole(long customerId);
 }

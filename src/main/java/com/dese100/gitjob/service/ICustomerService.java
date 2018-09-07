@@ -27,7 +27,7 @@ public interface ICustomerService {
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
     /// <returns>A customer</returns>
-    Customer GetCustomerById(Integer customerId);
+    Customer GetCustomerById(Long customerId);
 
     /// <summary>
     /// Get customers by identifiers
