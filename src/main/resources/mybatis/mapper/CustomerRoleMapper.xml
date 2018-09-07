@@ -44,6 +44,10 @@
 		delete from customer_role
 		where Id = #{id,jdbcType=BIGINT}
 	</delete>
+		<delete id="deleteCustomerRoleBy" parameterType="java.lang.Long">
+		delete from customer_customer_role_mapping
+		where CustomerId = #{customerId,jdbcType=BIGINT}
+	</delete>
 	<select id="getCustomerRoleById" parameterType="java.lang.Long"
 		resultMap="BaseResultMap">
  	select 
@@ -62,6 +66,16 @@
      <if test="showHidden=false">
      	Active = 1
      </if>
+    </where>
+	</select>
+	
+	 
+	<select id="getCustomerRoleBySystemName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+    <include refid="Base_Column_List" />
+    from customer_role
+    <where>
+      SystemName = #{systemName,jdbcType=VARCHAR}
     </where>
 	</select>
 </mapper>

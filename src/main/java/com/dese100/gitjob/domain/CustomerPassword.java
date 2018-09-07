@@ -3,10 +3,11 @@ package com.dese100.gitjob.domain;
 import java.util.Date;
 
 public class CustomerPassword {
+	private Long id;
 	 /// <summary>
     /// Gets or sets the customer identifier
     /// </summary>
-    private int customerId;
+    private Long customerId;
 
     /// <summary>
     /// Gets or sets the password
@@ -16,7 +17,7 @@ public class CustomerPassword {
     /// <summary>
     /// Gets or sets the password format identifier
     /// </summary>
-    private int passwordFormatId;
+    private Integer passwordFormatId;
 
     /// <summary>
     /// Gets or sets the password salt
@@ -33,10 +34,10 @@ public class CustomerPassword {
     /// <summary>
     /// Gets or sets the password format
     /// </summary>
-    public int getCustomerId() {
+    public Long getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 	public String getPassword() {
@@ -45,10 +46,10 @@ public class CustomerPassword {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public int getPasswordFormatId() {
+	public Integer getPasswordFormatId() {
 		return passwordFormatId;
 	}
-	public void setPasswordFormatId(int passwordFormatId) {
+	public void setPasswordFormatId(Integer passwordFormatId) {
 		this.passwordFormatId = passwordFormatId;
 	}
 	public String getPasswordSalt() {
@@ -63,4 +64,11 @@ public class CustomerPassword {
 	public void setCreatedOnUtc(Date createdOnUtc) {
 		this.createdOnUtc = createdOnUtc;
 	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 }

@@ -17,7 +17,7 @@ import com.dese100.gitjob.domain.CustomerRole;
 import com.dese100.gitjob.domain.result.Result;
 import com.dese100.gitjob.exception.BizException;
 import com.dese100.gitjob.exception.code.ExceptionCode;
-import com.dese100.gitjob.mapper.CustomerRoleMapper;
+import com.dese100.gitjob.mapper.ModelMapper;
 import com.dese100.gitjob.models.CustomerRoleModel;
 import com.dese100.gitjob.service.ICustomerService;
 import com.github.pagehelper.PageInfo;
@@ -33,7 +33,7 @@ public class CustomerRoleController {
 	@PostMapping("/list")
 	public Result<?> list(@Validated @RequestBody DataSourceRequest command){
 		PageInfo<CustomerRole> customerRoles = customerService.GetAllCustomerRoles(true);
-		return Result.success(customerRoles);
+		return Result.success(ModelMapper.toModel(customerRoles));
 	}
 	
 	@PostMapping("/createcustomerrole")
@@ -42,9 +42,19 @@ public class CustomerRoleController {
 		if(bindingResult.hasErrors()){
 			return Result.bindingError(bindingResult);
 		}
-		CustomerRole customerRole = CustomerRoleMapper.toEntity(customerRoleMode);
+		customerRoleMode.setIsSystemRole(false);
+		CustomerRole customerRole = ModelMapper.toEntity(customerRoleMode);
 		customerService.insertCustomerRole(customerRole);
 		return Result.success(customerRole.getId());
+	} 
+	
+	@GetMapping("/edit")
+	public Result<?> edit(long id)
+	{
+		CustomerRole customerRole = customerService.getCustomerRoleById(id);
+		if(null == customerRole)
+			throw BizException.wrap(ExceptionCode.NOT_FOUND_ENTITT_ERROR);
+		return Result.success(ModelMapper.toModel(customerRole));
 	} 
 	
 	@PostMapping("/edit")
@@ -63,7 +73,7 @@ public class CustomerRoleController {
 			}
 		}
 		
-		customerRole = CustomerRoleMapper.toEntity(customerRoleMode);
+		customerRole = ModelMapper.toEntity(customerRoleMode);
 		customerService.updateCustomerRole(customerRole);
 		return Result.success(customerRole.getId());
 	} 

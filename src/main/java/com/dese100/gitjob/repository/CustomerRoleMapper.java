@@ -12,10 +12,10 @@ import com.dese100.gitjob.domain.CustomerRole;
 public interface CustomerRoleMapper {	
 	
     void deleteCustomerRole(Long id);
-
+    
     CustomerRole getCustomerRoleById(Long customerRoleId);
 
-    CustomerRole getCustomerRoleBySystemName(String systemName);
+    List<CustomerRole> getCustomerRoleBySystemName(String systemName);
 
     List<CustomerRole> getAllCustomerRoles(boolean showHidden);
 

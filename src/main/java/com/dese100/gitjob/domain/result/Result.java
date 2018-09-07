@@ -99,7 +99,7 @@ public class Result<T> {
     }
     
     public static <E> Result<E> bindingError(BindingResult bindingResult) {
-        return new Result(ExceptionCode.VALIDATE_ERROR.getCode(), bindingResult.getFieldErrors(), ExceptionCode.VALIDATE_ERROR.getMsg());
+        return new Result(ExceptionCode.VALIDATE_ERROR.getCode(), bindingResult.getAllErrors(), ExceptionCode.VALIDATE_ERROR.getMsg());
     }
     
     public static <E> Result<E> timeout() {

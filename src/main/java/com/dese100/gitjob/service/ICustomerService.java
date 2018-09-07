@@ -1,5 +1,6 @@
 package com.dese100.gitjob.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.dese100.gitjob.domain.Customer;
@@ -9,6 +10,12 @@ import com.dese100.gitjob.domain.PasswordFormat;
 import com.github.pagehelper.PageInfo;
 
 public interface ICustomerService {
+
+    PageInfo<Customer> GetAllCustomers(Date createdFromUtc,
+    		Date createdToUtc, 
+        Integer[] customerRoleIds, String email, String userName,
+         String phone, Integer pageIndex, Integer pageSize);
+    
     /// <summary>
     /// Delete a customer
     /// </summary>
@@ -20,14 +27,14 @@ public interface ICustomerService {
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
     /// <returns>A customer</returns>
-    Customer GetCustomerById(int customerId);
+    Customer GetCustomerById(Integer customerId);
 
     /// <summary>
     /// Get customers by identifiers
     /// </summary>
     /// <param name="customerIds">Customer identifiers</param>
     /// <returns>Customers</returns>
-    List<Customer> GetCustomersByIds(int[] customerIds);
+    List<Customer> GetCustomersByIds(Integer[] customerIds);
 
     /// <summary>
     /// Get customer by email
@@ -68,15 +75,15 @@ public interface ICustomerService {
     /// <param name="customer">Customer</param>
     void UpdateCustomer(Customer customer);
     
-    List<CustomerPassword> GetCustomerPasswords(int customerId,
-        PasswordFormat passwordFormat, int passwordsToReturn);
+    List<CustomerPassword> GetCustomerPasswords(Integer customerId,
+        PasswordFormat passwordFormat, Integer passwordsToReturn);
 
     /// <summary>
     /// Get current customer password
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
     /// <returns>Customer password</returns>
-    CustomerPassword GetCurrentPassword(int customerId);
+    CustomerPassword GetCurrentPassword(Integer customerId);
 
     /// <summary>
     /// Insert a customer password
@@ -128,5 +135,7 @@ public interface ICustomerService {
     /// </summary>
     /// <param name="customerRole">Customer role</param>
     void updateCustomerRole(CustomerRole customerRole);
+    
+    void setCustomerRole(Customer customer,  List<CustomerRole> customerRoles);
 
 }

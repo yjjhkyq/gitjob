@@ -1,6 +1,8 @@
 package com.dese100.gitjob.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Customer extends BaseEntity{
 	private Long id;
@@ -16,6 +18,11 @@ public class Customer extends BaseEntity{
 	private Date createdOnUtc;
 	private Boolean active;
 	private Long tenantId;
+	private List<CustomerRole> customerRoles;
+	
+	public Customer() {
+		customerRoles = new ArrayList<CustomerRole>();
+	}
 	public Long getId() {
 		return id;
 	}
@@ -58,9 +65,7 @@ public class Customer extends BaseEntity{
 	public void setCannotLoginUntilDateUtc(Date cannotLoginUntilDateUtc) {
 		this.cannotLoginUntilDateUtc = cannotLoginUntilDateUtc;
 	}
-	public Boolean isDeleted() {
-		return deleted;
-	}
+ 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
@@ -82,17 +87,32 @@ public class Customer extends BaseEntity{
 	public void setCreatedOnUtc(Date createdOnUtc) {
 		this.createdOnUtc = createdOnUtc;
 	}
-	public Boolean isActive() {
-		return active;
-	}
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+
 	public Long getTenantId() {
 		return tenantId;
 	}
 	public void setTenantId(Long tenantId) {
 		this.tenantId = tenantId;
 	}
-	
+	public Boolean getIsSystemAccount() {
+		return isSystemAccount;
+	}
+	public void setIsSystemAccount(Boolean isSystemAccount) {
+		this.isSystemAccount = isSystemAccount;
+	}
+	public List<CustomerRole> getCustomerRoles() {
+		return customerRoles;
+	}
+	public void setCustomerRoles(List<CustomerRole> customerRoles) {
+		this.customerRoles = customerRoles;
+	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public Boolean getActive() {
+		return active;
+	}
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 }

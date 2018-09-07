@@ -1,33 +1,117 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dese100.gitjob.repository.CustomerMapper">
-	<resultMap type="com.dese100.gitjob.domain.Customer" id="BaseResultMap">
+	<resultMap type="com.dese100.gitjob.domain.Customer"
+		id="BaseResultMap">
 		<id column="Id" jdbcType="BIGINT" property="id" />
-	    <result column="UserName" jdbcType="VARCHAR" property="userName" />
-	    <result column="Phone" jdbcType="VARCHAR" property="phone" />
-	    <result column="Email" jdbcType="VARCHAR" property="email" />
-	    <result column="EmailToRevalidate" jdbcType="VARCHAR" property="emailToRevalidate" />
-	    <result column="FailedLoginAttempts" jdbcType="INTEGER" property="failedLoginAttempts" />
-	    <result column="CannotLoginUntilDateUtc" jdbcType="DATE" property="cannotLoginUntilDateUtc" />
-	    <result column="Deleted" jdbcType="BIT" property="deleted" />
-	    <result column="IsSystemAccount" jdbcType="BIT" property="isSystemAccount" />
-	    <result column="SystemName" jdbcType="VARCHAR" property="systemName" />
-	    <result column="CreatedOnUtc" jdbcType="DATE" property="createdOnUtc" />
-	    <result column="Active" jdbcType="BIT" property="active" />
-	    <result column="TenantId" jdbcType="INTEGER" property="tenantId" />
+		<result column="UserName" jdbcType="VARCHAR"
+			property="userName" />
+		<result column="Phone" jdbcType="VARCHAR" property="phone" />
+		<result column="Email" jdbcType="VARCHAR" property="email" />
+		<result column="EmailToRevalidate" jdbcType="VARCHAR"
+			property="emailToRevalidate" />
+		<result column="FailedLoginAttempts" jdbcType="INTEGER"
+			property="failedLoginAttempts" />
+		<result column="CannotLoginUntilDateUtc" jdbcType="DATE"
+			property="cannotLoginUntilDateUtc" />
+		<result column="Deleted" jdbcType="BIT" property="deleted" />
+		<result column="IsSystemAccount" jdbcType="BIT"
+			property="isSystemAccount" />
+		<result column="SystemName" jdbcType="VARCHAR"
+			property="systemName" />
+		<result column="CreatedOnUtc" jdbcType="DATE"
+			property="createdOnUtc" />
+		<result column="Active" jdbcType="BIT" property="active" />
+		<result column="TenantId" jdbcType="INTEGER"
+			property="tenantId" />
+		<collection property="customerRoles" ofType="com.dese100.gitjob.domain.CustomerRole">
+			<id column="CustomerRoleId" jdbcType="BIGINT" property="id"/>
+		</collection>
 	</resultMap>
 	<insert id="insertCustomer"
 		parameterType="com.dese100.gitjob.domain.Customer"
 		useGeneratedKeys="true" keyProperty="id">
-		insert into customer (Id, UserName, Email,
-		EmailToRevalidate, FailedLoginAttempts, CannotLoginUntilDateUtc,
+		insert into customer (Id,
+		UserName, Email,
+		EmailToRevalidate, FailedLoginAttempts,
+		CannotLoginUntilDateUtc,
 		Deleted, IsSystemAccount, SystemName,
 		CreatedOnUtc,Active,TenantId)
-		values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
+		values (#{id,jdbcType=BIGINT},
+		#{userName,jdbcType=VARCHAR},
 		#{email,jdbcType=VARCHAR},
-		#{emailToRevalidate,jdbcType=VARCHAR}, #{failedLoginAttempts,jdbcType=INTEGER},
+		#{emailToRevalidate,jdbcType=VARCHAR},
+		#{failedLoginAttempts,jdbcType=INTEGER},
 		#{cannotLoginUntilDateUtc,jdbcType=TIMESTAMP},
-		#{deleted,jdbcType=BIT}, #{isSystemAccount,jdbcType=BIT}, #{systemName,jdbcType=VARCHAR},
+		#{deleted,jdbcType=BIT}, #{isSystemAccount,jdbcType=BIT},
+		#{systemName,jdbcType=VARCHAR},
 		#{createdOnUtc,jdbcType=TIMESTAMP},#{active,jdbcType=BIT},#{tenantId,jdbcType=INTEGER})
+	</insert>
+<sql id="Base_Column_List">
+		c.Id,c.UserName, c.Email,
+		c.EmailToRevalidate, c.FailedLoginAttempts,c.CannotLoginUntilDateUtc,c.Deleted,c.IsSystemAccount,c.SystemName,c.CreatedOnUtc,c.Active
+	</sql>
+	<select id="getAllCustomers" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />, ccrm.CustomerRoleId 
+		from customer c left join customer_customer_role_mapping ccrm on c.Id =
+		ccrm.CustomerId
+		<where>
+			<if test="createdFromUtc != null">
+				c.CreatedOnUtc > #{createdFromUtc,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createdToUtc != null">
+				and #{createdToUtc,jdbcType=TIMESTAMP} > c.CreatedOnUtc
+			</if>
+			<if test="customerRoleIds != null and customerRoleIds.length > 0">
+				and ccrm.CustomerRoleId in
+				<foreach collection="customerRoleIds" item="customerRoleId"
+					index="index" open="(" close=")" separator=",">
+					#{customerRoleId}
+				</foreach>
+			</if>
+			<if test="email != null and email.length()>0">
+			<bind name="patternEmail" value="'%' + email + '%'" />
+				and c.Email like #{patternEmail,jdbcType=VARCHAR}
+			</if>
+			<if test="userName != null and userName.length()>0">
+			<bind name="patternUserName" value="'%' + userName + '%'" />
+				and c.UserName like #{patternUserName,jdbcType=VARCHAR}
+			</if>
+			<if test="phone != null and phone.length()>0">
+			<bind name="patternPhone" value="'%' + phone + '%'" />
+				and c.Phone like #{patternPhone,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="getCustomerBy" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />, ccrm.CustomerRoleId 
+		from customer c left join customer_customer_role_mapping ccrm on c.Id =
+		ccrm.CustomerId
+		<where>
+			<if test="id != null">
+				c.Id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="email != null and email.length() > 0">
+				and c.Email = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="systemName != null and systemName.length() > 0">
+				and c.SystemName = #{systemName,jdbcType=VARCHAR}
+			</if>
+			<if test="userName != null and userName.length() > 0">
+				and c.UserName = #{userName,jdbcType=VARCHAR}
+			</if>
+		</where>
+		limit 1
+	</select>
+	<delete id="deleteAllCustomerRole">
+		delete from customer_customer_role_mapping where CustomerId= #{customerId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insertCustomerRole" useGeneratedKeys="true" keyProperty="Id">
+		<foreach collection="customerRoles" item = 'customerRole' index="index"  separator=";">
+			insert into customer_customer_role_mapping(CustomerId, CustomerRoleId) values
+			(#{customer.id,jdbcType=BIGINT}, #{customerRole.id,jdbcType=BIGINT})
+		</foreach>
 	</insert>
 </mapper>

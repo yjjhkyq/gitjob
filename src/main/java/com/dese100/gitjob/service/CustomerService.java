@@ -11,9 +11,11 @@ import com.dese100.gitjob.domain.PasswordFormat;
 import com.dese100.gitjob.exception.BizException;
 import com.dese100.gitjob.exception.code.ExceptionCode;
 import com.dese100.gitjob.repository.CustomerMapper;
+import com.dese100.gitjob.repository.CustomerPasswordMapper;
 import com.dese100.gitjob.repository.CustomerRoleMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mysql.cj.util.StringUtils;
 @Service
 public class CustomerService implements ICustomerService{
 
@@ -21,39 +23,36 @@ public class CustomerService implements ICustomerService{
 	CustomerMapper customerDao;
 	@Autowired
 	CustomerRoleMapper customerRoleDao;
-	
+	@Autowired
+	CustomerPasswordMapper customerPasswordDao;
 	@Override
 	public void DeleteCustomer(Customer customer) {
 	}
 
 	@Override
-	public Customer GetCustomerById(int customerId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Customer GetCustomerById(Integer customerId) {
+		return customerDao.getCustomerBy(customerId, null, null, null);
 	}
 
 	@Override
-	public List<Customer> GetCustomersByIds(int[] customerIds) {
+	public List<Customer> GetCustomersByIds(Integer[] customerIds) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Customer GetCustomerByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		return customerDao.getCustomerBy(null, email, null, null);
 	}
 
 	@Override
 	public Customer GetCustomerBySystemName(String systemName) {
-		// TODO Auto-generated method stub
-		return null;
+		return customerDao.getCustomerBy(null, null, systemName, null);
 	}
 
 	@Override
 	public Customer GetCustomerByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		return customerDao.getCustomerBy(null, null, null, username);
 	}
 
 	@Override
@@ -79,22 +78,21 @@ public class CustomerService implements ICustomerService{
 	}
 
 	@Override
-	public List<CustomerPassword> GetCustomerPasswords(int customerId, PasswordFormat passwordFormat,
-			int passwordsToReturn) {
+	public List<CustomerPassword> GetCustomerPasswords(Integer customerId, PasswordFormat passwordFormat,
+			Integer passwordsToReturn) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public CustomerPassword GetCurrentPassword(int customerId) {
+	public CustomerPassword GetCurrentPassword(Integer customerId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void InsertCustomerPassword(CustomerPassword customerPassword) {
-		// TODO Auto-generated method stub
-		
+		customerPasswordDao.InsertCustomerPassword(customerPassword);
 	}
 
 	@Override
@@ -117,7 +115,11 @@ public class CustomerService implements ICustomerService{
 
 	@Override
 	public CustomerRole getCustomerRoleBySystemName(String systemName) {
-		// TODO Auto-generated method stub
+		if(StringUtils.isNullOrEmpty(systemName))
+			return null;
+		List<CustomerRole> customerRoles = customerRoleDao.getCustomerRoleBySystemName(systemName);
+		if(0 < customerRoles.size())
+			return customerRoles.get(0);
 		return null;
 	}
 
@@ -139,4 +141,18 @@ public class CustomerService implements ICustomerService{
 		customerRoleDao.updateCustomerRole(customerRole);
 	}
 
+	@Override
+	public PageInfo<Customer> GetAllCustomers(Date createdFromUtc, Date createdToUtc, Integer[] customerRoleIds,
+			String email, String userName, String phone, Integer pageIndex, Integer pageSize) {
+//		PageHelper.startPage(1, 10);
+		List<Customer> data = customerDao.getAllCustomers(createdFromUtc, createdToUtc, customerRoleIds, email, userName, phone);
+		PageInfo<Customer> pageInfo = new PageInfo<>(data);
+		return pageInfo;
+	}
+
+	@Override
+	public void setCustomerRole(Customer customer, List<CustomerRole> customerRoles) {
+		customerDao.deleteAllCustomerRole(customer.getId());
+		customerDao.insertCustomerRole(customer, customerRoles);
+	}
 }
