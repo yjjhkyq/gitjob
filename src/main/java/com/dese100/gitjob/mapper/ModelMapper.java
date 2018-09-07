@@ -3,14 +3,58 @@ package com.dese100.gitjob.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dese100.gitjob.domain.Category;
 import com.dese100.gitjob.domain.Customer;
 import com.dese100.gitjob.domain.CustomerRole;
+import com.dese100.gitjob.models.CategoryModel;
 import com.dese100.gitjob.models.CustomerModel;
 import com.dese100.gitjob.models.CustomerRoleModel;
 import com.dese100.gitjob.service.ICustomerService;
 import com.github.pagehelper.PageInfo;
 
 public class ModelMapper {
+	
+	public static Category toEntity(CategoryModel src) {
+		Category dest = new Category();
+		dest.setCreatedOnUtc(src.getCreatedOnUtc());
+		dest.setDeleted(src.getDeleted());
+		dest.setDescription(src.getDescription());
+		dest.setDisplayOrder(src.getDisplayOrder());
+		dest.setId(src.getId());
+		dest.setIncludeInTopMenu(src.getIncludeInTopMenu());
+		dest.setName(src.getName());
+		dest.setParentCategoryId(src.getParentCategoryId());
+		dest.setPublished(src.getPublished());
+		dest.setShowOnHomePage(src.getShowOnHomePage());
+		dest.setUpdatedOnUtc(src.getUpdatedOnUtc());
+		return dest;
+	}
+	
+	public static CategoryModel toModel(Category src) {
+		CategoryModel dest = new CategoryModel();
+		dest.setCreatedOnUtc(src.getCreatedOnUtc());
+		dest.setDeleted(src.getDeleted());
+		dest.setDescription(src.getDescription());
+		dest.setDisplayOrder(src.getDisplayOrder());
+		dest.setId(src.getId());
+		dest.setIncludeInTopMenu(src.getIncludeInTopMenu());
+		dest.setName(src.getName());
+		dest.setParentCategoryId(src.getParentCategoryId());
+		dest.setPublished(src.getPublished());
+		dest.setShowOnHomePage(src.getShowOnHomePage());
+		dest.setUpdatedOnUtc(src.getUpdatedOnUtc());
+		return dest;
+	}
+	
+	public static PageInfo<CategoryModel> toCategoryPageModel(PageInfo<Category> src){
+		if(null == src)
+			return null;
+		List<CategoryModel> dest = new ArrayList<CategoryModel>();
+		src.getList().forEach(s -> {dest.add(toModel(s));});
+		PageInfo<CategoryModel> pageInfo = pageInfoCopy(src);
+		pageInfo.setList(dest);
+		return pageInfo;
+	}
 	
 	public static CustomerRole toEntity(CustomerRoleModel model)
 	{
@@ -25,6 +69,8 @@ public class ModelMapper {
 	
 	public static CustomerRoleModel toModel(CustomerRole entity)
 	{
+		if(null == entity)
+			return null;
 		CustomerRoleModel model = new CustomerRoleModel();
 		model.setId(entity.getId());
 		model.setActive(entity.getActive());
@@ -35,6 +81,8 @@ public class ModelMapper {
 	}
 	
 	public static PageInfo<CustomerRoleModel> toModel(PageInfo<CustomerRole> entityList){
+		if(null == entityList)
+			return null;
 		List<CustomerRoleModel> modelList = new ArrayList<CustomerRoleModel>();
 		entityList.getList().forEach(s -> {modelList.add(toModel(s));});
 		PageInfo<CustomerRoleModel> pageInfo = pageInfoCopy(entityList);

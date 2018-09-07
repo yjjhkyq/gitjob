@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dese100.gitjob.repository.CategoryMapper">
+	<resultMap type="com.dese100.gitjob.domain.Category"
+		id="BaseResultMap">
+		<id column="Id" jdbcType="BIGINT" property="id" />
+		<result column="Name" jdbcType="VARCHAR" property="name" />
+		<result column="Description" jdbcType="VARCHAR"
+			property="description" />
+		<result column="ParentCategoryId" jdbcType="BIGINT"
+			property="parentCategoryId" />
+		<result column="ShowOnHomePage" jdbcType="BIT"
+			property="showOnHomePage" />
+		<result column="IncludeInTopMenu" jdbcType="BIT"
+			property="includeInTopMenu" />
+		<result column="Published" jdbcType="BIT" property="published" />
+		<result column="Deleted" jdbcType="BIT" property="deleted" />
+		<result column="DisplayOrder" jdbcType="INTEGER"
+			property="displayOrder" />
+		<result column="CreatedOnUtc" jdbcType="DATE"
+			property="createdOnUtc" />
+		<result column="UpdatedOnUtc" jdbcType="DATE"
+			property="updatedOnUtc" />
+	</resultMap>
+	<insert id="insertCategory"
+		parameterType="com.dese100.gitjob.domain.Category"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into category (Id,
+		Name,
+		Description,
+		ParentCategoryId, ShowOnHomePage,
+		IncludeInTopMenu,
+		Published, Deleted, DisplayOrder,
+		CreatedOnUtc,UpdatedOnUtc)
+		values
+		(#{id,jdbcType=BIGINT},
+		#{name,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{parentCategoryId,jdbcType=BIGINT},
+		#{showOnHomePage,jdbcType=BIT},
+		#{includeInTopMenu,jdbcType=BIT},
+		#{published,jdbcType=BIT},
+		#{deleted,jdbcType=BIT},#{displayOrder,jdbcType=INTEGER},
+		#{createdOnUtc,jdbcType=TIMESTAMP},#{updatedOnUtc,jdbcType=BIT})
+	</insert>
+	<update id="updateCategory" parameterType="com.dese100.gitjob.domain.Category">
+		update category
+		<set>
+			Name = #{name,jdbcType=VARCHAR}, Description =
+			#{description,jdbcType=VARCHAR},
+			ParentCategoryId=#{parentCategoryId,jdbcType=BIGINT},
+			ShowOnHomePage =
+			#{showOnHomePage,jdbcType=BIT},IncludeInTopMenu =
+			#{includeInTopMenu,jdbcType=BIT},Published=#{published,jdbcType=BIT},
+			Deleted=#{deleted,jdbcType=BIT},DisplayOrder=#{displayOrder,jdbcType=INTEGER},CreatedOnUtc=#{createdOnUtc,jdbcType=DATE},
+			UpdatedOnUtc=#{updatedOnUtc,jdbcType=DATE}
+		</set>
+		<where>
+			Deleted = 0 and  Id = #{id,jdbcType=BIGINT}
+		</where>
+	</update>
+	<sql id="Base_Column_List">
+		c.Id,c.Name, c.Description,
+		c.ParentCategoryId,c.ShowOnHomePage,
+		c.IncludeInTopMenu,c.Published,c.Deleted,c.DisplayOrder,c.CreatedOnUtc,c.UpdatedOnUtc
+	</sql>
+	<select id="getAllCategories" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from category c
+		<where>
+			c.Deleted = 0
+			<if test="name != null and  name.length()>0">
+				<bind name="patternName" value="'%' + name + '%'" />
+				and c.Name like #{patternName,jdbcType=VARCHAR}
+			</if>
+			<if test="published != null">
+				and c.Published = #{published,jdbcType=BIT}
+			</if>
+			<if test="showOnHomePage != null">
+				and c.ShowOnHomePage = #{showOnHomePage,jdbcType=BIT}
+			</if>
+			<if test="includeInTopMenu != null">
+				and c.IncludeInTopMenu = #{includeInTopMenu,jdbcType=BIT}
+			</if>
+		</where>
+	</select>
+	<select id="getAllCategoriesByParentCategoryId"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from category c
+		<where>
+			c.Deleted = 0
+			<if test="parentCategoryId != null ">
+				and c.ParentCategoryId = parentCategoryId
+			</if>
+			<if test="published != null">
+				and c.Published = #{published,jdbcType=BIT}
+			</if>
+		</where>
+	</select>
+	<select id="getCategoryById" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from category c
+		<where>
+			c.Deleted = 0
+			<if test="_parameter != null">
+				and c.Id = #{_parameter,jdbcType=BIGINT}
+			</if>
+		</where>
+		limit 1
+	</select>
+</mapper>
